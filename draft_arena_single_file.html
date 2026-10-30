@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b12">
+  <title>Draft Arena — Auction Room</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{--bg:#090b12;--panel:rgba(19,22,33,.94);--line:rgba(255,255,255,.085);--muted:#858b9d;--text:#f3f4f8;--gold:#f0bd57;--gold2:#ffda88;--peak:#f2bd55;--mid:#69b9e8;--rod:#ad91e9}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 50% -20%,rgba(69,78,115,.22),transparent 55%),var(--bg);font-family:'DM Sans',sans-serif;overflow-x:hidden}button,select,input{font:inherit}.ambient{position:fixed;width:340px;height:340px;border-radius:50%;filter:blur(110px);opacity:.12;pointer-events:none;z-index:-1}.ambient-one{background:#b17a2c;top:22%;left:-240px}.ambient-two{background:#5355a5;right:-240px;bottom:5%}.app-shell{width:min(1120px,calc(100% - 48px));margin:0 auto;padding:28px 0 22px}.topbar{height:48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:20px}.brand{display:flex;align-items:center;gap:11px;color:inherit;text-decoration:none}.brand-mark{display:grid;place-items:center;width:32px;height:32px;background:var(--gold);color:#17130c;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:23px;transform:skew(-7deg)}.brand-name{font-weight:800;letter-spacing:2px;font-size:13px}.brand-name span{color:var(--gold)}.topbar-right{display:flex;align-items:center;gap:9px;color:#9298a8;font-size:10px;letter-spacing:1.8px;font-weight:700}.live-dot{width:7px;height:7px;border-radius:50%;background:#72c79b;box-shadow:0 0 12px #72c79b}.intro{padding:42px 0 27px}.eyebrow,.step-label{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:2px}.eyebrow{display:flex;align-items:center;gap:9px}.eyebrow span{width:18px;height:1px;background:var(--gold)}.intro h1{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-size:clamp(48px,7vw,72px);line-height:.98;margin:14px 0 10px;font-weight:800}.intro h1 em{color:var(--gold);font-style:normal}.intro p{margin:0;color:#969cad;font-size:13px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;box-shadow:0 18px 55px #0003}.setup-panel,.bidding-panel{padding:22px 24px;margin-bottom:17px}.section-heading,.panel-heading,.history-heading,.players-heading{display:flex;justify-content:space-between;align-items:center}.section-heading h2,.panel-heading h2,.history-heading h2,.players-heading h2{font-size:18px;margin:6px 0 0;letter-spacing:-.4px}.heading-icon{color:var(--gold);font-size:21px}.setup-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;margin-top:21px}.form-field{display:flex;flex-direction:column;gap:8px;min-width:0}.form-field>span,.field-label{color:#a1a7b7;font-size:9px;font-weight:700;letter-spacing:1.4px}.form-field input,.form-field select,.select-wrap select{width:100%;min-width:0;padding:12px 13px;border-radius:7px;border:1px solid #ffffff20;outline:none;background:#0e121d;color:#f3f4f8;font-size:12px}.form-field input:focus,.form-field select:focus,.select-wrap select:focus{border-color:#f0bd57a8;box-shadow:0 0 0 3px #f0bd5710}.name-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:13px}.name-grid:empty{display:none}.name-grid .form-field input{padding:10px 11px}.setup-bottom{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:17px}.setup-bottom p,.bid-note{font-size:10px;color:#7c8496;margin:0;line-height:1.5}.button{min-height:43px;border-radius:7px;border:0;cursor:pointer;font-size:9px;letter-spacing:1.3px;font-weight:800;transition:.16s}.button:disabled{opacity:.35;cursor:not-allowed;transform:none}.button-primary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 15px;background:var(--gold);color:#1b160d}.button-primary:not(:disabled):hover{background:var(--gold2);transform:translateY(-1px)}.button-arrow{font-size:18px;font-weight:400}.workspace{display:grid;grid-template-columns:320px 1fr;gap:17px;margin-bottom:17px}.control-panel{padding:22px;display:flex;flex-direction:column}.panel-heading{align-items:flex-start}.field-label{display:block;margin:25px 0 8px}.select-wrap{position:relative}.select-wrap select{appearance:none;padding-right:36px;cursor:pointer}.select-wrap select option{background:#111521}.select-chevron{position:absolute;right:13px;top:6px;color:var(--gold);font-size:21px;pointer-events:none}.tier-key{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:21px 0 17px;padding:15px 0 11px}.tier-key-heading{display:flex;justify-content:space-between;color:#aab0be;font-size:9px;letter-spacing:1.3px;font-weight:700;margin-bottom:12px}.tier-key-heading span{color:#656d80;font-size:8px}.tier-row{display:grid;grid-template-columns:8px 43px 1fr;gap:9px;align-items:center;margin:10px 0;font-size:11px;font-weight:600}.tier-row small{color:#727a8c;font-size:9px;font-weight:400}.tier-dot{width:7px;height:7px;border-radius:50%}.peak-dot{background:var(--peak)}.mid-dot{background:var(--mid)}.rod-dot{background:var(--rod)}.control-actions{display:grid;gap:8px}.button-quiet{background:transparent;border:1px solid var(--line);color:#9da4b4}.button-quiet:not(:disabled):hover{background:#ffffff0d;color:white}.keyboard-hint{margin-top:13px;color:#626a7b;font-size:8px;line-height:1.5;letter-spacing:.6px;text-align:center}.result-panel{padding:22px;min-width:0;display:flex;flex-direction:column}.result-topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.draw-status{display:flex;align-items:center;gap:7px;color:#81899b;font-size:8px;letter-spacing:1px;font-weight:700}.draw-status i{width:6px;height:6px;border-radius:50%;background:#70788b}.draw-status.active i{background:#72c79b;box-shadow:0 0 9px #72c79b}.result-stage{flex:1;min-height:300px;margin:18px 0;position:relative;overflow:hidden;border:1px solid #f0bd5724;border-radius:10px;background:radial-gradient(ellipse at 50% 48%,#bd89371f,transparent 55%),linear-gradient(145deg,#171a27,#10131d 72%);display:grid;place-items:center}.result-stage:before{content:"";position:absolute;inset:0;opacity:.16;background-image:linear-gradient(#ffffff0a 1px,transparent 1px),linear-gradient(90deg,#ffffff0a 1px,transparent 1px);background-size:35px 35px}.orbit{position:absolute;border:1px solid #f0bd571a;border-radius:50%;width:280px;height:280px}.orbit-a{width:330px;height:330px}.orbit-b{width:440px;height:440px;border-style:dashed;opacity:.5}.stage-corner{position:absolute;width:17px;height:17px;border-color:#f0bd578c;border-style:solid}.corner-tl{top:13px;left:13px;border-width:1px 0 0 1px}.corner-br{bottom:13px;right:13px;border-width:0 1px 1px 0}.placeholder-content,.pick-content{position:relative;z-index:1;text-align:center;padding:20px;width:100%;animation:appear .3s ease}.placeholder-symbol{margin:0 auto 14px;width:52px;height:52px;border:1px solid #f0bd5759;border-radius:50%;display:grid;place-items:center;color:var(--gold);font-family:'Barlow Condensed';font-size:30px}.placeholder-title{font-family:'Barlow Condensed';font-size:26px;text-transform:uppercase}.placeholder-content p{font-size:10px;color:#82899b}.hidden{display:none!important}.pick-category{color:#a0a7b7;font-size:9px;letter-spacing:2px;font-weight:700;margin-bottom:14px}.pick-tier{display:inline-block;padding:6px 16px;border:1px solid currentColor;border-radius:3px;font-size:9px;letter-spacing:2px;font-weight:800}.pick-tier.peak{color:var(--peak)}.pick-tier.mid{color:var(--mid)}.pick-tier.rod{color:var(--rod)}.pick-content h2{font-family:'Barlow Condensed';font-size:clamp(36px,5vw,55px);line-height:1.05;text-transform:uppercase;margin:17px 0 21px;overflow-wrap:anywhere}.pick-divider{display:flex;justify-content:center;align-items:center;gap:9px;color:#747c8e;font-size:8px;letter-spacing:1.5px}.pick-divider span{width:24px;height:1px;background:#51596b}.result-footer{display:flex;align-items:center;justify-content:space-around}.stat-block{display:grid;gap:4px;text-align:center;flex:1}.stat-number{font-family:'Barlow Condensed';font-size:24px;font-weight:700}.stat-caption{font-size:7px;letter-spacing:1px;color:#737b8d;font-weight:700}.stat-divider{height:27px;width:1px;background:var(--line)}.bid-grid{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:12px;margin-top:20px}.award-button{min-width:150px}.bid-note{margin-top:12px}.players-section{margin:23px 0 17px}.players-heading{margin-bottom:13px}.players-count{font-size:8px;color:#858da0;letter-spacing:1.3px;font-weight:700}.players-board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.players-placeholder{grid-column:1/-1;padding:28px;text-align:center;color:#7d8597;font-size:11px}.player-card{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:11px;min-width:0}.player-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line)}.player-name{font-size:13px;font-weight:700}.player-sub{color:#737b8d;font-size:9px;margin-top:4px}.player-spent{text-align:right;color:var(--gold);font-family:'Barlow Condensed';font-size:20px}.player-spent small{display:block;color:#737b8d;font-family:'DM Sans';font-size:7px;letter-spacing:1px}.roster-list{display:grid;gap:7px;padding-top:11px}.roster-slot{display:grid;grid-template-columns:23px minmax(0,1fr) auto;align-items:center;gap:8px;min-height:34px;padding:5px 8px;border:1px dashed #ffffff1c;border-radius:6px;color:#6f788b;font-size:9px}.slot-number{color:#8b93a4;font-family:'Barlow Condensed';font-size:14px}.slot-item{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.slot-empty{color:#636c7e}.slot-price{color:var(--gold);font-size:9px;font-weight:700}.history-panel{padding:20px 23px}.history-heading{align-items:center}.history-heading h2{font-size:17px}.clear-history{background:transparent;border:0;color:#858da0;cursor:pointer;font-size:10px}.clear-history:disabled{opacity:.3;cursor:default}.history-empty{padding:20px 0 3px;color:#70788a;font-size:10px}.history-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:15px}.history-item{min-width:0;display:flex;align-items:center;gap:10px;background:#ffffff06;border:1px solid var(--line);border-radius:7px;padding:9px 11px}.history-index{color:#737b8d;font-family:'Barlow Condensed';font-size:16px}.history-details{min-width:0;flex:1}.history-name{color:#e6e8ee;font-size:10px;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.history-meta{color:#777f91;font-size:8px;margin-top:3px}.history-price{color:var(--gold);font-size:9px;font-weight:700}.footer{display:flex;justify-content:space-between;color:#596173;font-size:8px;font-weight:700;letter-spacing:1.7px;padding:19px 3px 0}@keyframes appear{from{opacity:0;transform:translateY(7px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}@media(max-width:800px){.app-shell{width:min(100% - 28px,600px);padding-top:18px}.workspace{grid-template-columns:1fr}.name-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.setup-grid{grid-template-columns:1fr 1fr}.setup-grid .form-field:first-child{grid-column:1/-1}.players-board{grid-template-columns:1fr}.bid-grid{grid-template-columns:1fr 1fr}.award-button{grid-column:1/-1}.history-list{grid-template-columns:1fr}}@media(max-width:430px){.intro h1{font-size:49px}.setup-panel,.bidding-panel{padding:17px}.setup-bottom{align-items:stretch;flex-direction:column}.setup-bottom .button{width:100%}.setup-grid{grid-template-columns:1fr}.setup-grid .form-field:first-child{grid-column:auto}.result-topline{align-items:flex-start;flex-direction:column}.result-stage{min-height:260px}.stat-caption{font-size:6px}}
+
+</style>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#"><span class="brand-mark">D</span><span class="brand-name">DRAFT<span>ARENA</span></span></a>
+      <div class="topbar-right"><span class="live-dot"></span><span class="topbar-label">AUCTION ROOM</span></div>
+    </header>
+
+    <section class="intro">
+      <div class="eyebrow"><span></span> BUILD YOUR LINEUP</div>
+      <h1>Draft your <em>legacy.</em></h1>
+      <p>Set up your players, draw an item and decide who takes it home.</p>
+    </section>
+
+    <section class="setup-panel panel">
+      <div class="section-heading">
+        <div><div class="step-label">01 / GAME SETUP</div><h2>Configure your room</h2></div>
+        <span class="heading-icon">⚙</span>
+      </div>
+      <div class="setup-grid">
+        <label class="form-field"><span>NUMBER OF PLAYERS</span>
+          <select id="playerCount">
+            <option value="2">2 Players</option><option value="3">3 Players</option>
+            <option value="4" selected>4 Players</option><option value="5">5 Players</option>
+            <option value="6">6 Players</option><option value="7">7 Players</option><option value="8">8 Players</option>
+          </select>
+        </label>
+        <label class="form-field"><span>MINIMUM BID</span><input id="minimumBid" type="number" min="1" step="1" value="10"></label>
+        <label class="form-field"><span>STARTING BID AMOUNT</span><input id="startingBid" type="number" min="1" step="1" value="10"></label>
+      </div>
+      <div id="playerNames" class="name-grid"></div>
+      <div class="setup-bottom"><p>Players can be renamed at any time before starting.</p><button class="button button-primary" id="startGameBtn">CREATE PLAYERS <span class="button-arrow">↗</span></button></div>
+    </section>
+
+    <section class="workspace">
+      <aside class="control-panel panel">
+        <div class="panel-heading"><div><div class="step-label">02 / ITEM DRAW</div><h2>Choose a universe</h2></div><span class="heading-icon">✳</span></div>
+        <label class="field-label" for="categorySelect">DRAFT CATEGORY</label>
+        <div class="select-wrap"><select id="categorySelect"><option value="">Select a category</option></select><span class="select-chevron">⌄</span></div>
+        <div class="tier-key">
+          <div class="tier-key-heading">TIER POOL <span>RANDOMLY DRAWN</span></div>
+          <div class="tier-row"><span class="tier-dot peak-dot"></span><span>Peak</span><small>Top-tier picks</small></div>
+          <div class="tier-row"><span class="tier-dot mid-dot"></span><span>Mid</span><small>Strong contenders</small></div>
+          <div class="tier-row"><span class="tier-dot rod-dot"></span><span>Rod</span><small>Wildcard picks</small></div>
+        </div>
+        <div class="control-actions">
+          <button class="button button-primary" id="drawBtn" disabled><span>DRAW A PICK</span><span class="button-arrow">↗</span></button>
+          <button class="button button-quiet" id="skipBtn" disabled>⇢ &nbsp; Skip current pick</button>
+          <button class="button button-quiet" id="resetBtn" disabled>↻ &nbsp; Reset this category</button>
+        </div>
+        <div class="keyboard-hint">NO REPEATS UNTIL THE SELECTED CATEGORY IS RESET</div>
+      </aside>
+
+      <section class="result-panel panel" aria-live="polite">
+        <div class="result-topline"><span class="step-label">03 / CURRENT ITEM</span><span class="draw-status" id="status"><i></i> WAITING FOR CATEGORY</span></div>
+        <div class="result-stage">
+          <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+          <div class="placeholder-content" id="placeholder"><div class="placeholder-symbol">?</div><div class="placeholder-title">Who's up next?</div><p>Select a category and draw your first pick.</p></div>
+          <div class="pick-content hidden" id="pickContent"><div class="pick-category" id="pickCategory"></div><div class="pick-tier" id="pickTier"></div><h2 id="pickName"></h2><div class="pick-divider"><span></span><b>AVAILABLE FOR BIDDING</b><span></span></div></div>
+          <div class="stage-corner corner-tl"></div><div class="stage-corner corner-br"></div>
+        </div>
+        <div class="result-footer">
+          <div class="stat-block"><span class="stat-number" id="selectedCount">0</span><span class="stat-caption">PICKS DRAWN</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-block"><span class="stat-number" id="remainingCount">—</span><span class="stat-caption">PICKS LEFT</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-block"><span class="stat-number" id="poolCount">—</span><span class="stat-caption">TOTAL IN POOL</span></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="bidding-panel panel">
+      <div class="section-heading"><div><div class="step-label">04 / PLACE A BID</div><h2>Who gets this pick?</h2></div><span class="heading-icon">⌁</span></div>
+      <div class="bid-grid">
+        <label class="form-field"><span>SELECT PLAYER</span><select id="bidPlayer" disabled><option value="">Create players first</option></select></label>
+        <label class="form-field"><span>BID AMOUNT</span><input id="bidAmount" type="number" min="1" step="1" value="10" disabled></label>
+        <button class="button button-primary award-button" id="awardBtn" disabled>AWARD PICK <span class="button-arrow">↗</span></button>
+      </div>
+      <p class="bid-note" id="bidNote">Create players and draw an item to enable bidding. Awarding a pick adds it to that player's collection.</p>
+    </section>
+
+    <section class="players-section">
+      <div class="players-heading"><div><div class="step-label">05 / PLAYER COLLECTIONS</div><h2>Your draft teams</h2></div><span class="players-count" id="playersCountLabel">0 PLAYERS</span></div>
+      <div id="playersBoard" class="players-board"><div class="players-placeholder panel">Create players above to see their collection slots here.</div></div>
+    </section>
+
+    <section class="history-panel panel">
+      <div class="history-heading"><div><div class="step-label">06 / AUCTION LOG</div><h2>Recent activity</h2></div><button class="clear-history" id="clearHistoryBtn" disabled>Clear log</button></div>
+      <div class="history-empty" id="historyEmpty">No auction activity yet.</div><div class="history-list" id="historyList"></div>
+    </section>
+    <footer class="footer"><span>DRAFT ARENA</span><span>MAKE YOUR PICKS COUNT.</span></footer>
+  </main>
+  <script>
+const draftCategories = {
+  "One Piece Characters": {
+    Peak: ["Monkey D. Luffy","Roronoa Zoro","Sanji","Nami","Nico Robin","Shanks","Trafalgar D. Water Law","Portgas D. Ace","Gol D. Roger","Edward Newgate (Whitebeard)","Dracule Mihawk","Monkey D. Garp","Tony Tony Chopper","Usopp","Jinbe","Boa Hancock","Donquixote Doflamingo","Sabo","Silvers Rayleigh","Kaido","Charlotte Katakuri","Kozuki Oden","Yamato","Brook","Franky","Crocodile","Buggy","Kuzan (Aokiji)","Sakazuki (Akainu)","Marshall D. Teach (Blackbeard)"],
+    Mid: ["Eustass Kid","Killer","Marco","King","Queen","Benn Beckman","Lucky Roux","Yasopp","Perona","Bon Clay","Vivi","Carrot","Bartolomeo","Cavendish","Corazon (Rosinante)","Enel","Rob Lucci","Kaku","Smoker","Tashigi","Fujitora","Kizaru","Sengoku","Gecko Moria","Magellan","Hannyabal","Reiju Vinsmoke","Vinsmoke Judge","Pudding","Charlotte Cracker","Charlotte Smoothie","Charlotte Oven","Charlotte Brulee","Jewelry Bonney","Urouge","X Drake","Basil Hawkins","Scratchmen Apoo","Bepo","Pedro","Kin'emon","Denjiro","Momonosuke","Kiku","Ashura Doji","Kawamatsu","Shirahoshi","Fisher Tiger","Koala","Hina"],
+    Rod: ["Foxxy","Wapol","Spandam","Hody Jones","Vander Decken IX","Trebol","Diamante","Pica","Sugar","Machvise","Senor Pink","Burgess","Van Augur","Doc Q","Jesus Burgess","Foxy Pirates' Porche","Charlos","Saint Rosward","Saint Saturn","Alvida","Kuro","Don Krieg","Arlong","Mr. 5","Miss Valentine","Mr. 4","Miss Merry Christmas","Wanze","Duval","Caribou","Coribou","Caesar Clown","Monet","Vergo","Sheepshead","Holdem","Speed","Who's-Who","Sasaki","Black Maria","Page One","Ulti","Orochi","Kanjuro","Higuma","Demaro Black","Jango","Fullbody","Richie"]
+  },
+
+  "One Piece Arcs": {
+    Peak: ["Marineford","Enies Lobby","Wano Country","Whole Cake Island","Water 7","Sabaody Archipelago","Arlong Park","Alabasta","Dressrosa","Egghead","Impel Down","Skypiea"],
+    Mid: ["East Blue Saga","Baratie","Drum Island","Jaya","Thriller Bark","Zou","Punk Hazard","Fish-Man Island","Post-War","Reverie","Romance Dawn","Loguetown","Little Garden","Amazon Lily","Return to Sabaody","Post-Enies Lobby"],
+    Rod: ["Orange Town","Syrup Village","Reverse Mountain","Whisky Peak","Long Ring Long Land","Foxy's Return","Ice Hunter","Spa Island","Little East Blue","Z's Ambition","Caesar Retrieval","Silver Mine","Marine Rookie","Cidre Guild"]
+  },
+
+  "Naruto Characters": {
+    Peak: ["Naruto Uzumaki","Sasuke Uchiha","Kakashi Hatake","Itachi Uchiha","Madara Uchiha","Minato Namikaze","Jiraiya","Shikamaru Nara","Hinata Hyuga","Sakura Haruno","Gaara","Obito Uchiha","Rock Lee","Might Guy","Pain (Nagato)","Hashirama Senju","Tsunade","Killer B","Orochimaru","Kurama","Neji Hyuga","Shisui Uchiha","Mitsuki","Boruto Uzumaki","Kushina Uzumaki"],
+    Mid: ["Sasuke Uchiha (Hebi)","Konan","Deidara","Kisame Hoshigaki","Tobirama Senju","Hiruzen Sarutobi","Iruka Umino","Sai","Yamato","Temari","Kankuro","Ino Yamanaka","Choji Akimichi","Kiba Inuzuka","Shino Aburame","Kurenai Yuhi","Asuma Sarutobi","Anko Mitarashi","Kakuzu","Hidan","Sasori","Zabuza Momochi","Haku","Kabuto Yakushi","Danzo Shimura","Onoki","Mei Terumi","A","Darui","Mifune","Hanzo","Rin Nohara","Tenten","Konohamaru Sarutobi","Sarada Uchiha","Kawaki","Himawari Uzumaki","Momoshiki Otsutsuki","Kaguya Otsutsuki","Indra Otsutsuki","Ashura Otsutsuki"],
+    Rod: ["Dosu Kinuta","Zaku Abumi","Kin Tsuchi","Yoroi Akado","Misumi Tsurugi","Aoba Yamashiro","Ebisu","Izumo Kamizuki","Kotetsu Hagane","Udon Ise","Moegi Kazamatsuri","Shizune","Genma Shiranui","Hayate Gekko","Baki","Yashamaru","Karui","Omoi","Samui","Atsui","Fuu","Utakata","Yugito Nii","Roshi","Han","Karin","Suigetsu Hozuki","Jugo","Guren","Kimimaro","Tayuya","Kidomaru","Sakon","Ukon","Jirobo","Ginkaku","Kinkaku","Mizuki","Ame Orphans' associate"]
+  },
+
+  "Demon Slayer Characters": {
+    Peak: ["Tanjiro Kamado","Nezuko Kamado","Zenitsu Agatsuma","Inosuke Hashibira","Giyu Tomioka","Kyojuro Rengoku","Shinobu Kocho","Mitsuri Kanroji","Muichiro Tokito","Tengen Uzui","Akaza","Kokushibo","Yoriichi Tsugikuni","Muzan Kibutsuji","Kanao Tsuyuri"],
+    Mid: ["Gyomei Himejima","Sanemi Shinazugawa","Obanai Iguro","Genya Shinazugawa","Doma","Gyutaro","Daki","Rui","Enmu","Tamayo","Yushiro","Kanae Kocho","Sabito","Makomo","Aoi Kanzaki","Murata","Hotaru Haganezuka","Shinjuro Rengoku","Senjuro Rengoku","Kagaya Ubuyashiki","Amane Ubuyashiki","Nakime","Hantengu","Gyokko","Kaigaku"],
+    Rod: ["Swamp Demon","Hand Demon","Temple Demon","Tongue Demon","Horned Demon","Susamaru","Yahaba","Kyogai","Spider Mother","Spider Father","Spider Brother","Spider Sister","Kamanue","Mukago","Wakuraba","Rokuro","Rui's Mother","Rui's Father","Rui's Sister","Lower Rank Two","Lower Rank Four","Lower Rank Five","Lower Rank Six","Ozaki","Takeo Kamado","Hanako Kamado","Shigeru Kamado","Rokuta Kamado"]
+  },
+
+  "South Indian Cinema": {
+    Peak: ["Nayakan","Anbe Sivam","Vikram (2022)","Kaithi","Jai Bhim","Soorarai Pottru","Pariyerum Perumal","Asuran","96","Super Deluxe","Drishyam","Kumbalangi Nights","Manichitrathazhu","Bangalore Days","Premam","Lucia","Kirik Party","KGF: Chapter 1","KGF: Chapter 2","Kantara","Maheshinte Prathikaaram","Ustad Hotel","Charlie","Aruvi","Visaranai","Aaranya Kaandam"],
+    Mid: ["Ponniyin Selvan: I","Ponniyin Selvan: II","Vikram Vedha","Maharaja","Maanadu","Thuppakki","Ghajini (2005)","Ratsasan","Vada Chennai","Soodhu Kavvum","Mankatha","Alaipayuthey","Roja","Thalapathi","Sivaji","Enthiran","Jigarthanda","Jigarthanda DoubleX","Sarpatta Parambarai","Kaithi","Master","Leo","Jailer","Minnal Murali","Bheeshma Parvam","Drishyam 2","Premam","Bangalore Days","U Turn","777 Charlie","Avane Srimannarayana","Ulidavaru Kandanthe","Charlie 777","Eega","Magadheera","Baahubali: The Beginning","Baahubali 2: The Conclusion","RRR","Sita Ramam","Mahanati"],
+    Rod: ["Beast","Annathe","Darbar","Varisu","Sarkar","Puli","Agnyaathavaasi","Sardar Gabbar Singh","Acharya","Liger","The Warrior","Skanda","Akhanda","Vivegam","NGK","Brahmotsavam","Spyder","Sahoo","Radhe Shyam","Mister","VVR","Cobra","Valimai","Anjaan","Bairavaa","Kaappaan","Kaavalan","Massu Engira Masilamani","Kochadaiiyaan"]
+  },
+
+  "Telugu Cinema": {
+    Peak: ["Mayabazar","C/o Kancharapalem","Jersey","Sita Ramam","Nuvvu Naaku Nachav","Mahanati","RRR","Baahubali 2: The Conclusion","Rangasthalam","Athadu","Pokiri","Eega","Magadheera","Vedam","Arjun Reddy","Agent Sai Srinivasa Athreya","Mathu Vadalara","Mallesham","Awe!","Pelli Choopulu","Manam","Sankarabharanam","Swathi Muthyam","Sagara Sangamam","Aha Naa Pellanta","Kshana Kshanam","Gundamma Katha","Nartanasala","Sankarabharanam","Mithunam"],
+    Mid: ["Baahubali: The Beginning","RRR","Khaleja","Jalsa","Gabbar Singh","Race Gurram","Ala Vaikunthapurramuloo","Srimanthudu","Janatha Garage","Rangasthalam","Pushpa: The Rise","Okkadu","Murari","Darling","Manmadhudu","Bommarillu","Godavari","Anand","Happy Days","Leader","Oopiri","Kshanam","Goodachari","Evaru","HIT: The First Case","Brochevarevarura","Ee Nagaraniki Emaindhi","Ante Sundaraniki","Hi Nanna","Virupaksha","Dasara","Balagam","Samajavaragamana","MAD","Tillu Square","Hanu-Man","Bimbisara","Sye","Aarya","Ready","Kick","100% Love","Bhale Bhale Magadivoy","Nannaku Prematho","Temper","Dookudu","Atharintiki Daaredi","Fidaa","Geetha Govindam"],
+    Rod: ["Agnyaathavaasi","Liger","Acharya","Brahmotsavam","Shakti","Shadow","VVR","Akhil","Agent","Radhe Shyam","The Warrior","Skanda","Kavacham","Sardaar Gabbar Singh","Bruce Lee: The Fighter","Mister","Nela Ticket","Vinaya Vidheya Rama","Sahoo","Bholaa Shankar","Rama Rama Krishna Krishna","Okka Magadu","Parama Veera Chakra","Rebel","Puli","Brahmotsavam","Srinivasa Kalyanam","Inttelligent","Gunturodu","Joru","Aatadukundam Raa"]
+  },
+
+  "Anime Series": {
+    Peak: ["Fullmetal Alchemist: Brotherhood","Attack on Titan","One Piece","Hunter x Hunter (2011)","Death Note","Steins;Gate","Naruto Shippuden","Code Geass","Monster","Vinland Saga","Cowboy Bebop","Mob Psycho 100","Frieren: Beyond Journey's End","Haikyuu!!","Demon Slayer","Jujutsu Kaisen","JoJo's Bizarre Adventure","Gintama","Legend of the Galactic Heroes","Made in Abyss"],
+    Mid: ["Naruto","Bleach","Dragon Ball Z","Dragon Ball Super","My Hero Academia","Chainsaw Man","Spy x Family","One Punch Man","Psycho-Pass","Erased","Your Lie in April","Violet Evergarden","Re:Zero","Parasyte: The Maxim","Black Clover","Fruits Basket","The Promised Neverland (Season 1)","Dr. Stone","Kaguya-sama: Love Is War","Bocchi the Rock!","Blue Lock","Solo Leveling","Cyberpunk: Edgerunners","Samurai Champloo","Berserk (1997)","Trigun","Mushishi","Great Teacher Onizuka","Hellsing Ultimate","Neon Genesis Evangelion"],
+    Rod: ["Fairy Tail","Tokyo Revengers","Sword Art Online","The Seven Deadly Sins","Boruto: Naruto Next Generations","Tokyo Ghoul (anime)","Plunderer","The Asterisk War","Rent-a-Girlfriend","Domestic Girlfriend","The Fruit of Evolution","Ex-Arm","King's Game","Aho-Girl","The Master of Ragnarok","Gibiate","Conception","Hand Shakers","Big Order","Pupa"]
+  },
+
+  "Indian Actors": {
+    Peak: ["Amitabh Bachchan","Shah Rukh Khan","Aamir Khan","Salman Khan","Rajinikanth","Kamal Haasan","Mammootty","Mohanlal","Chiranjeevi","Nagarjuna","N.T. Rama Rao","Akkineni Nageswara Rao","Dilip Kumar","Irrfan Khan","Naseeruddin Shah","Manoj Bajpayee","Pankaj Tripathi","Ranbir Kapoor","Ranveer Singh","Hrithik Roshan","Dhanush","Vijay","Suriya","Fahadh Faasil","Vikram"],
+    Mid: ["Ajay Devgn","Akshay Kumar","Saif Ali Khan","Anil Kapoor","Shahid Kapoor","Vicky Kaushal","Ayushmann Khurrana","Rajkummar Rao","R. Madhavan","Siddharth","Sivakarthikeyan","Karthi","Karthik","Prithviraj Sukumaran","Dulquer Salmaan","Nivin Pauly","Tovino Thomas","Puneeth Rajkumar","Yash","Sudeep","Allu Arjun","Jr NTR","Mahesh Babu","Prabhas","Ram Charan"],
+    Rod: ["Arjun Kapoor","Tiger Shroff","Varun Dhawan","Sidharth Malhotra","John Abraham","Emraan Hashmi","Riteish Deshmukh","Vishal","Arya","Jayam Ravi","Vijay Antony","Gopichand","Nithiin","Ram Pothineni","Bellamkonda Sreenivas","Akhil Akkineni","Manchu Manoj","Aadi Saikumar","Naga Shaurya","Sundeep Kishan","Adivi Sesh","Naga Chaitanya","Gautham Karthik","Jiiva","Vishnu Vishal"]
+  },
+
+  "Hollywood Movies (Famous)": {
+    Peak: ["The Shawshank Redemption","The Godfather","The Dark Knight","The Godfather Part II","The Lord of the Rings: The Return of the King","12 Angry Men","Schindler's List","The Lord of the Rings: The Fellowship of the Ring","Pulp Fiction","The Lord of the Rings: The Two Towers","Forrest Gump","Fight Club","Inception","Interstellar","The Matrix","Goodfellas","Se7en","The Silence of the Lambs","Saving Private Ryan","Gladiator","The Green Mile","Parasite","Whiplash","Spirited Away","The Prestige","The Departed","Back to the Future","The Empire Strikes Back","Terminator 2: Judgment Day","The Lion King","Spider-Man: Into the Spider-Verse","Avengers: Infinity War","Avengers: Endgame","The Lord of the Rings: The Return of the King","Django Unchained","The Pianist","Coco","WALL-E","Your Name","The Truman Show"],
+    Mid: ["Titanic","Avatar","Avatar: The Way of Water","Jurassic Park","Jaws","The Avengers","Iron Man","Captain America: The Winter Soldier","Guardians of the Galaxy","Black Panther","Joker","Logan","Deadpool","Deadpool 2","Dune","Dune: Part Two","Oppenheimer","Barbie","Top Gun: Maverick","Mission: Impossible - Fallout","Mad Max: Fury Road","The Wolf of Wall Street","Shutter Island","The Grand Budapest Hotel","The Social Network","La La Land","The Batman","Casino Royale","Skyfall","Harry Potter and the Prisoner of Azkaban","Harry Potter and the Deathly Hallows - Part 2","Star Wars: A New Hope","Rogue One","The Incredibles","Toy Story 3","Up","Inside Out","The Conjuring","Get Out","A Quiet Place"],
+    Rod: ["The Room","Cats","Morbius","Madame Web","Fantastic Four (2015)","Batman & Robin","The Last Airbender","Movie 43","The Emoji Movie","The Love Guru","Jack and Jill","After Earth","The Mummy (2017)","Transformers: The Last Knight","Terminator: Dark Fate","The Rise of Skywalker","Indiana Jones and the Dial of Destiny","Suicide Squad (2016)","Justice League (2017)","Green Lantern","The Happening","The Wicker Man (2006)","Battlefield Earth","Dragonball Evolution","The Legend of Hercules","Fifty Shades of Grey","The Kissing Booth","The Nutcracker in 3D","The Adventures of Pluto Nash","Gigli"]
+  },
+
+  "Marvel Characters": {
+    Peak: ["Spider-Man (Peter Parker)","Iron Man","Captain America (Steve Rogers)","Thor","Hulk","Wolverine","Deadpool","Black Panther (T'Challa)","Doctor Strange","Thanos","Loki","Scarlet Witch","Daredevil","Magneto","Professor X","Storm","Jean Grey","Miles Morales","Venom","Moon Knight","Hawkeye (Clint Barton)","Black Widow","Star-Lord","Rocket Raccoon","Winter Soldier","The Punisher","Ghost Rider","Fantastic Four's Reed Richards","Doctor Doom","Silver Surfer"],
+    Mid: ["Captain Marvel","Ant-Man (Scott Lang)","Wasp","Falcon (Sam Wilson)","Vision","War Machine","Gamora","Nebula","Drax","Groot","Mantis","Shang-Chi","She-Hulk","Ms. Marvel","Kate Bishop","Yelena Belova","America Chavez","Namor","Okoye","Shuri","M'Baku","Nick Fury","Maria Hill","Quicksilver","Hank Pym","Wong","Clea","Blade","Elektra","Luke Cage","Jessica Jones","Iron Fist","Colossus","Nightcrawler","Mystique","Rogue","Beast","Gambit","Kitty Pryde","Psylocke","Cable","Bishop","Emma Frost","Apocalypse","Green Goblin","Doctor Octopus","Kingpin","Mysterio","Vulture","Kraven the Hunter","Taskmaster","Red Skull","Ultron","Hela","Killmonger","Kang the Conqueror","The Watcher","Sentry","Nova","Beta Ray Bill"],
+    Rod: ["The Eternals' Phastos","The Eternals' Makkari","The Eternals' Druig","The Eternals' Sprite","The Eternals' Kingo","The Eternals' Gilgamesh","The Eternals' Ajak","The Eternals' Thena","The Eternals' Ikaris","The Eternals' Sersi","MODOK","The Leader","Abomination","Crossbones","Baron Zemo","Yellowjacket","Ghost (Ava Starr)","Aldrich Killian","Malekith","Ronan the Accuser","Korath","Ebony Maw","Cull Obsidian","Proxima Midnight","Corvus Glaive","The Mandarin (Trevor Slattery)","Whiplash","Justin Hammer","Batroc","Kaecilius","Dormammu","M.O.D.O.K.","The Spot","Prowler","Tombstone","Chameleon","Shocker","Scorpion","Hydro-Man","Morbius","Mole Man","Toad","Blob","Pyro","Sabretooth","Lady Deathstrike","The Hood","Mephisto","Enchantress","Ares"]
+  },
+
+  "Marvel Movies and Series": {
+    Peak: ["Avengers: Infinity War","Avengers: Endgame","Iron Man","Captain America: The Winter Soldier","Guardians of the Galaxy","The Avengers (2012)","Black Panther","Spider-Man: No Way Home","Thor: Ragnarok","Logan","Spider-Man: Into the Spider-Verse","Spider-Man: Across the Spider-Verse","X-Men: Days of Future Past","Captain America: Civil War","Daredevil (TV series)","Loki","WandaVision","X-Men '97","Deadpool","Deadpool & Wolverine","Guardians of the Galaxy Vol. 3","The Incredible Hulk","Spider-Man 2 (2004)","X-Men: First Class","The Punisher (TV series)"],
+    Mid: ["Doctor Strange","Black Panther: Wakanda Forever","Shang-Chi and the Legend of the Ten Rings","Ant-Man","Ant-Man and the Wasp","Captain Marvel","The Falcon and the Winter Soldier","Hawkeye","Moon Knight","Ms. Marvel","What If...?","The Guardians of the Galaxy Holiday Special","Spider-Man: Homecoming","Spider-Man: Far From Home","Iron Man 2","Iron Man 3","Thor","Thor: The Dark World","Avengers: Age of Ultron","Captain America: The First Avenger","The Marvels","The Wolverine","X2","X-Men","Fantastic Four (2005)","Blade","Blade II","Agents of S.H.I.E.L.D.","Jessica Jones","Luke Cage","Legion","The Gifted","Echo","Agatha All Along","Werewolf by Night","The New Mutants"],
+    Rod: ["Eternals","Thor: Love and Thunder","Ant-Man and the Wasp: Quantumania","Secret Invasion","Inhumans","Iron Fist","The Defenders","Helstrom","Morbius","Madame Web","Fantastic Four (2015)","X-Men: The Last Stand","X-Men Origins: Wolverine","Dark Phoenix","The Amazing Spider-Man 2","Ghost Rider: Spirit of Vengeance","Elektra","Howard the Duck","The Punisher (1989)","Blade: Trinity","The Fantastic Four (1994)","The Incredible Hulk (1977)","Man-Thing","The New Mutants (2020)","The Amazing Spider-Man","Venom: Let There Be Carnage"]
+  },
+
+  "TFI Actors/Actresses": {
+    Peak: ["Chiranjeevi","Nandamuri Balakrishna","Nagarjuna","Venkatesh","Mahesh Babu","Prabhas","Allu Arjun","Jr NTR","Ram Charan","Pawan Kalyan","Nani","Ravi Teja","Samantha Ruth Prabhu","Anushka Shetty","Sai Pallavi","Savitri","Soundarya","Vijayashanti","Ramya Krishna","Keerthy Suresh","Sreeleela","Rashmika Mandanna","N.T. Rama Rao","Akkineni Nageswara Rao","Krishna"],
+    Mid: ["Naga Chaitanya","Varun Tej","Sharwanand","Adivi Sesh","Vijay Deverakonda","Nithiin","Ram Pothineni","Siddhu Jonnalagadda","Naveen Polishetty","Sree Vishnu","Satyadev","Gopichand","Karthikeya Gummakonda","Suhas","Fahadh Faasil","Prakash Raj","Jagapathi Babu","Rajendra Prasad","Brahmanandam","Sunil","Rao Ramesh","Murali Sharma","Rashmi Gautam","Lavanya Tripathi","Ritu Varma","Nivetha Thomas","Rashmika Mandanna","Pooja Hegde","Kajal Aggarwal","Tamannaah Bhatia","Rakul Preet Singh","Genelia D'Souza","Bhumika Chawla","Sai Kumar","Naresh","Vennela Kishore","Srinivasa Reddy","Priyadarshi","Rahul Ramakrishna"],
+    Rod: ["Akhil Akkineni","Bellamkonda Sreenivas","Manchu Manoj","Manchu Vishnu","Aadi Saikumar","Naga Shaurya","Sundeep Kishan","Allari Naresh","Sudheer Babu","Ganta Ravi","Nikhil Siddhartha","Varun Sandesh","Sushanth","Tarun","Uday Kiran","Sumanth","Kalyan Ram","Nara Rohith","Vishwak Sen","Raj Tarun","Anu Emmanuel","Mehreen Pirzada","Payal Rajput","Nabha Natesh","Nidhhi Agerwal","Hansika Motwani","Catherine Tresa","Manchu Lakshmi","Ileana D'Cruz","Kriti Shetty","Krithi Kharbanda","Eesha Rebba","Anjali","Regina Cassandra","Rashi Singh"]
+  },
+
+  "JJK Characters": {
+    Peak: ["Satoru Gojo","Yuji Itadori","Megumi Fushiguro","Suguru Geto","Yuta Okkotsu","Kento Nanami","Ryomen Sukuna","Toji Fushiguro","Maki Zenin","Nobara Kugisaki","Choso","Aoi Todo","Toge Inumaki"],
+    Mid: ["Mahito","Yuki Tsukumo","Kinji Hakari","Hiromi Higuruma","Hajime Kashimo","Kenjaku","Naoya Zenin","Panda","Mei Mei","Shoko Ieiri","Utahime Iori","Takuma Ino","Atsuya Kusakabe","Fumihiko Takaba","Miguel","Riko Amanai","Kokichi Muta (Mechamaru)","Mai Zenin","Toji Fushiguro","Jogo","Hanami","Dagon","Uraume","Junpei Yoshino","Masamichi Yaga"],
+    Rod: ["Kiyotaka Ijichi","Akari Nitta","Arata Nitta","Momo Nishimiya","Kasumi Miwa","Noritoshi Kamo","Yoshinobu Gakuganji","Tsumiki Fushiguro","Eso","Kechizu","Haruta Shigemo","Jiro Awasaka","Ogami","Manami Suda","Toshihisa Negi","Ranta Zenin","Chojuro Zenin","Jinichi Zenin","Ogi Zenin","Mimiko Hasaba","Nanako Hasaba","Amai","Remi","Charles Bernard","Haba","Hanyu"]
+  },
+
+  "Game of Thrones Characters": {
+    Peak: ["Tyrion Lannister","Jon Snow","Daenerys Targaryen","Arya Stark","Cersei Lannister","Jaime Lannister","Ned Stark","Tywin Lannister","The Hound","Sansa Stark","Brienne of Tarth","Oberyn Martell","Petyr Baelish","Varys","Davos Seaworth","Robb Stark","Khal Drogo","Olenna Tyrell","Margaery Tyrell","Samwell Tarly"],
+    Mid: ["Bran Stark","Theon Greyjoy","Jorah Mormont","Melisandre","Stannis Baratheon","Bronn","Tormund Giantsbane","Ygritte","Gendry","Podrick Payne","Jaqen H'ghar","Missandei","Grey Worm","Beric Dondarrion","Sandor Clegane","Eddard Stark","Ramsay Bolton","Roose Bolton","Mance Rayder","Yara Greyjoy","Ellaria Sand","High Sparrow","Qyburn","Loras Tyrell","Jeor Mormont","Lyanna Mormont","Hodor","Gilly","Shireen Baratheon","Daario Naharis"],
+    Rod: ["Rickon Stark","Joffrey Baratheon","Lysa Arryn","Robin Arryn","Walder Frey","Edmure Tully","Viserys Targaryen","Pyat Pree","Locke","Karl Tanner","Rast","Polliver","Meryn Trant","Alliser Thorne","Olly","Septa Unella","Euron Greyjoy","Daario Naharis (recast)","Selyse Baratheon","Myrcella Baratheon","Tommen Baratheon","Aeron Greyjoy","Qhorin Halfhand","Craster","Janos Slynt"]
+  },
+
+  "Bleach Characters": {
+    Peak: ["Ichigo Kurosaki","Rukia Kuchiki","Sosuke Aizen","Kisuke Urahara","Yoruichi Shihoin","Kenpachi Zaraki","Byakuya Kuchiki","Toshiro Hitsugaya","Shunsui Kyoraku","Orihime Inoue","Uryu Ishida","Renji Abarai","Grimmjow Jaegerjaquez","Ulquiorra Cifer","Rangiku Matsumoto","Gin Ichimaru","Jushiro Ukitake","Yhwach","Genryusai Yamamoto","Mayuri Kurotsuchi"],
+    Mid: ["Shinji Hirako","Retsu Unohana","Sajin Komamura","Kisuke Urahara","Nelliel Tu Odelschwanck","Bazz-B","Jugram Haschwalth","Askin Nakk Le Vaar","Bambietta Basterbine","Nemu Kurotsuchi","Izuru Kira","Ikkaku Madarame","Yachiru Kusajishi","Rukia Kuchiki","Chad (Yasutora Sado)","Kukaku Shiba","Isshin Kurosaki","Masaki Kurosaki","Kon","Szayelaporro Granz","Nnoitra Gilga","Tier Harribel","Starrk","Coyote Starrk","Kaname Tosen","Kensei Muguruma","Rojuro Otoribashi","Lisa Yadomaru","Hiyori Sarugaki","Love Aikawa"],
+    Rod: ["Don Kanonji","Ganju Shiba","Mizuiro Kojima","Keigo Asano","Tatsuki Arisawa","Chizuru Honsho","Ririn","Kurōdo","Noba","Jinta Hanakari","Ururu Tsumugiya","Shawlong Koufang","Yylfordt Granz","D-Roy Rinker","Edrad Liones","Findorr Calius","Ggio Vega","Charlotte Chuhlhourne","Abirama Redder","Tesla Lindocruz","Zommari Rureaux","Aaroniero Arruruerie","Wonderweiss Margela","Gremmy Thoumeaux","Liltotto Lamperd","Meninas McAllon"]
+  },
+
+  "Cricketers (International + India, Men)": {
+    Peak: ["Sachin Tendulkar","Virat Kohli","MS Dhoni","Ricky Ponting","Brian Lara","Jacques Kallis","Wasim Akram","Shane Warne","Muttiah Muralitharan","Kumar Sangakkara","AB de Villiers","Chris Gayle","Viv Richards","Don Bradman","Rahul Dravid","Sourav Ganguly","Anil Kumble","Kapil Dev","Glenn McGrath","Wasim Akram","Adam Gilchrist","Dale Steyn","Ben Stokes","Joe Root","Kane Williamson","Steve Smith","Jasprit Bumrah","Rohit Sharma","Babar Azam","Shaheen Shah Afridi"],
+    Mid: ["Yuvraj Singh","Suresh Raina","Gautam Gambhir","VVS Laxman","Virender Sehwag","Harbhajan Singh","Zaheer Khan","Shoaib Akhtar","Inzamam-ul-Haq","Younis Khan","Saeed Anwar","Shahid Afridi","Brett Lee","Matthew Hayden","Michael Clarke","Michael Hussey","Shane Watson","Mitchell Johnson","Pat Cummins","Mitchell Starc","David Warner","Glenn Maxwell","Trent Boult","Ross Taylor","Daniel Vettori","Shakib Al Hasan","Mashrafe Mortaza","Tamim Iqbal","Kusal Mendis","Angelo Mathews","Mahela Jayawardene","Sanath Jayasuriya","Lasith Malinga","Tillakaratne Dilshan","Kagiso Rabada","Hashim Amla","Faf du Plessis","Graeme Smith","Andrew Flintoff","Alastair Cook","James Anderson","Stuart Broad","Moeen Ali","Jos Buttler","Eoin Morgan","Andrew Symonds","Shoaib Malik","Mohammad Rizwan","Shubman Gill","Ravindra Jadeja"],
+    Rod: ["Ajit Agarkar","Irfan Pathan","Yusuf Pathan","Manoj Tiwary","Robin Uthappa","Dinesh Karthik","Parthiv Patel","Murali Vijay","Ambati Rayudu","Shikhar Dhawan","Ishant Sharma","Bhuvneshwar Kumar","Umesh Yadav","Shardul Thakur","Deepak Chahar","Kedar Jadhav","Ravichandran Ashwin","Kuldeep Yadav","Yuzvendra Chahal","Rishabh Pant","Hardik Pandya","Sanju Samson","Prithvi Shaw","Ishan Kishan","Suryakumar Yadav","Mohammed Shami","Mohammed Siraj","Cheteshwar Pujara","Ajinkya Rahane","Manish Pandey","Ravindra Jadeja","Dwayne Bravo","Kieron Pollard","Andre Russell","Sunil Narine","Marlon Samuels","Darren Sammy","Shoaib Bashir","Adil Rashid","Mark Wood","Jonny Bairstow","Jason Roy","Liam Livingstone","Harry Brook","Tim Southee","Martin Guptill","Brendon McCullum","Ross Taylor","Jesse Ryder","Shane Bond"]
+  },
+
+  "Cricketers (India Only, Men)": {
+    Peak: ["Sachin Tendulkar","Virat Kohli","MS Dhoni","Rohit Sharma","Kapil Dev","Sunil Gavaskar","Rahul Dravid","Sourav Ganguly","Anil Kumble","Virender Sehwag","Yuvraj Singh","Jasprit Bumrah","Ravichandran Ashwin","VVS Laxman","Harbhajan Singh","Zaheer Khan","Gundappa Viswanath","Bishan Singh Bedi","MS Dhoni","Mohammed Shami","Ravindra Jadeja","Suryakumar Yadav","Gautam Gambhir","Srikkanth","Ravi Shastri"],
+    Mid: ["Shikhar Dhawan","Suresh Raina","Irfan Pathan","Yusuf Pathan","Dinesh Karthik","Rishabh Pant","Hardik Pandya","Shubman Gill","Cheteshwar Pujara","Ajinkya Rahane","Bhuvneshwar Kumar","Ishant Sharma","Mohammed Siraj","Kuldeep Yadav","Yuzvendra Chahal","Sanjay Manjrekar","Javagal Srinath","Venkatesh Prasad","Ashish Nehra","Munaf Patel","Robin Uthappa","Ambati Rayudu","Kedar Jadhav","Manoj Tiwary","Murali Vijay","Ravichandran Ashwin","Sanjay Bangar","Aakash Chopra","Venkatesh Iyer","Tilak Varma","Ruturaj Gaikwad","Ishan Kishan","Sanju Samson","Washington Sundar","Axar Patel","Shardul Thakur","Deepak Chahar","Prasidh Krishna","Arshdeep Singh","Rinku Singh"],
+    Rod: ["Parthiv Patel","Ajit Agarkar","Saba Karim","Nayan Mongia","Amit Mishra","Piyush Chawla","Pragyan Ojha","RP Singh","Sreesanth","Joginder Sharma","Manish Pandey","Stuart Binny","Rahul Sharma","Varun Aaron","Barinder Sran","Jaydev Unadkat","Krunal Pandya","Vijay Shankar","Deepak Hooda","Rahul Tripathi","Shivam Dube","Abhimanyu Easwaran","Mayank Agarwal","Karun Nair","Shreyas Iyer","Ravi Bishnoi","Avesh Khan","Umran Malik","Mukesh Kumar","Chetan Sharma","Venkatapathy Raju","Ajay Jadeja","Mohammad Kaif","Hemang Badani","Ramesh Powar"]
+  },
+
+  "Movie Iconic Characters (Telugu)": {
+    Peak: ["Baahubali (Amarendra)","Bhallaladeva","Pushpa Raj","Chitti Babu (Rangasthalam)","Gabbar Singh","Pokiri's Pandu","Athadu's Nandu","Arjun (Okkadu)","Balu (Manmadhudu)","Siddharth (Bommarillu)","Chari (Dhee)","Venky (Venky)","Chantigadu (Nuvvu Naaku Nachav)","Rishi (Maharshi)","Ram (Ready)","Bittu (Aarya)","Deva (Khaidi No. 150)","Rama (Magadheera)","Sita (Mahanati)","Savitri (Mahanati)","Jai (Jersey)","Arjun (Arjun Reddy)","Vikram (Anukokunda Oka Roju)","Aditya (Kshanam)","Rama (Sita Ramam)","Bheem (RRR)","Alluri Sitarama Raju (RRR)","Komaram Bheem (RRR)","Deva (Salaar)","Tillu (DJ Tillu)"],
+    Mid: ["Lucky (Race Gurram)","Bantu (Ala Vaikunthapurramuloo)","Abhi (Aarya 2)","Chandu (Godavari)","Anand (Anand)","Raghu Ram (Leader)","Siddhu (Malliswari)","Nagarjuna (Hello Brother character)","Chiru (Shankar Dada MBBS)","Pandu (Pokiri)","Raju (Jalsa)","Sanjay (Businessman)","Rama Krishna (Temper)","Daya (Temper)","Subramanyam (Subramanyam for Sale)","Gautham (Ye Maaya Chesave)","Karthik (Uyyala Jampala)","Vijay (Geetha Govindam)","Vasu (Fidaa)","Varun (Tholi Prema)","Abhiram (Manam)","Vikram (Oopiri)","Rama (Nannaku Prematho)","Siddhu (Gunde Jaari Gallanthayyinde)","Chari (Adhurs)","Narasimha (Simha)","Balu (Atharintiki Daaredi)","Raghuvaran (Raghuvaran B.Tech)","Surya (Nani's Gang Leader)","Raja (Sankarabharanam)"],
+    Rod: ["Akhil (Akhil)","Jai (Jai Lava Kusa)","Sreenu (Nela Ticket)","Rama (Vinaya Vidheya Rama)","Raju (Shadow)","Siddhu (Liger)","Vijay (The Warrior)","Rudra (Skanda)","Sreenu (Inttelligent)","Bharat (Bharat Ane Nenu)","Siva (Shakti)","Chinna (Aagadu)","Rama (Brahmotsavam)","Sreenu (Bruce Lee)","Balu (Rebel)","Raju (Akhanda)","Veera (Veera)","Rama (Sardaar Gabbar Singh)","Rishi (Spyder)","Arjun (Agent)","Siddhu (Radhe Shyam)","Rama (Acharya)","Raju (Bholaa Shankar)","Chanti (VVR)","Rama (Liger)","Nandu (Mister)","Rama (Agnyaathavaasi)"]
+  }
+};
+</script>
+<script>
+(() => {
+  "use strict";
+  const tiers = ["Peak", "Mid", "Rod"];
+  const $ = id => document.getElementById(id);
+
+  let remainingByCategory = {};
+  let history = [];
+  let players = [];
+  let currentPick = null;
+  let minimumBid = 1;
+  let startingBid = 10;
+
+  function clonePool(category) {
+    return Object.fromEntries(tiers.map(tier => [tier, [...draftCategories[category][tier]]]));
+  }
+  function totalEntries(category) {
+    return tiers.reduce((sum, tier) => sum + draftCategories[category][tier].length, 0);
+  }
+  function remainingCount(category) {
+    if (!category || !remainingByCategory[category]) return 0;
+    return tiers.reduce((sum, tier) => sum + remainingByCategory[category][tier].length, 0);
+  }
+  function esc(value) {
+    return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  function renderNameInputs() {
+    const count = Number($("playerCount").value);
+    const container = $("playerNames");
+    const oldNames = [...container.querySelectorAll("input")].map(input => input.value);
+    container.replaceChildren();
+    for (let i = 0; i < count; i++) {
+      const label = document.createElement("label");
+      label.className = "form-field";
+      const span = document.createElement("span");
+      span.textContent = `PLAYER ${String(i + 1).padStart(2, "0")} NAME`;
+      const input = document.createElement("input");
+      input.type = "text";
+      input.maxLength = 24;
+      input.placeholder = `Player ${i + 1}`;
+      input.value = oldNames[i] || `Player ${i + 1}`;
+      input.dataset.playerName = "true";
+      label.append(span, input);
+      container.append(label);
+    }
+  }
+
+  function createPlayers() {
+    const count = Number($("playerCount").value);
+    minimumBid = Math.max(1, Number($("minimumBid").value) || 1);
+    startingBid = Math.max(minimumBid, Number($("startingBid").value) || minimumBid);
+    $("minimumBid").value = minimumBid;
+    $("startingBid").value = startingBid;
+
+    const names = [...$("playerNames").querySelectorAll("input")].map((input, i) => input.value.trim() || `Player ${i + 1}`);
+    players = names.slice(0, count).map((name, index) => ({ id: index, name, roster: [], spent: 0 }));
+    $("bidAmount").value = startingBid;
+    renderPlayerOptions();
+    renderPlayers();
+    updateBidControls();
+    $("bidNote").textContent = `Minimum bid: ${minimumBid}. Enter the amount offered by the selected player, then award the current item to them.`;
+  }
+
+  function renderPlayerOptions() {
+    const select = $("bidPlayer");
+    select.replaceChildren();
+    if (!players.length) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "Create players first";
+      select.append(option);
+      return;
+    }
+    players.forEach(player => {
+      const option = document.createElement("option");
+      option.value = String(player.id);
+      option.textContent = player.name;
+      select.append(option);
+    });
+  }
+
+  function renderPlayers() {
+    const board = $("playersBoard");
+    board.replaceChildren();
+    $("playersCountLabel").textContent = `${players.length} PLAYER${players.length === 1 ? "" : "S"}`;
+    if (!players.length) {
+      const empty = document.createElement("div");
+      empty.className = "players-placeholder panel";
+      empty.textContent = "Create players above to see their collection slots here.";
+      board.append(empty);
+      return;
+    }
+
+    players.forEach(player => {
+      const card = document.createElement("article");
+      card.className = "player-card";
+      const head = document.createElement("div");
+      head.className = "player-card-head";
+      const identity = document.createElement("div");
+      const name = document.createElement("div");
+      name.className = "player-name";
+      name.textContent = player.name;
+      const sub = document.createElement("div");
+      sub.className = "player-sub";
+      sub.textContent = `${player.roster.length} item${player.roster.length === 1 ? "" : "s"} won`;
+      identity.append(name, sub);
+      const spent = document.createElement("div");
+      spent.className = "player-spent";
+      spent.textContent = player.spent.toLocaleString();
+      const spentLabel = document.createElement("small");
+      spentLabel.textContent = "TOTAL SPENT";
+      spent.append(spentLabel);
+      head.append(identity, spent);
+
+      const roster = document.createElement("div");
+      roster.className = "roster-list";
+      const slotsToShow = Math.max(5, player.roster.length);
+      for (let i = 0; i < slotsToShow; i++) {
+        const slot = document.createElement("div");
+        slot.className = "roster-slot";
+        const number = document.createElement("span");
+        number.className = "slot-number";
+        number.textContent = String(i + 1).padStart(2, "0");
+        const item = document.createElement("span");
+        item.className = `slot-item ${player.roster[i] ? "" : "slot-empty"}`;
+        item.textContent = player.roster[i] ? player.roster[i].item : "Empty slot — add a winning pick";
+        slot.append(number, item);
+        if (player.roster[i]) {
+          const price = document.createElement("span");
+          price.className = "slot-price";
+          price.textContent = `${player.roster[i].amount.toLocaleString()}`;
+          slot.append(price);
+        }
+        roster.append(slot);
+      }
+      card.append(head, roster);
+      board.append(card);
+    });
+  }
+
+  function updateStats() {
+    const category = $("categorySelect").value;
+    const total = category ? totalEntries(category) : 0;
+    const left = category ? remainingCount(category) : 0;
+    const drawn = category ? history.filter(p => p.category === category).length : 0;
+    $("selectedCount").textContent = category ? drawn : "0";
+    $("remainingCount").textContent = category ? left : "—";
+    $("poolCount").textContent = category ? total : "—";
+    $("drawBtn").disabled = !category || left === 0;
+    $("resetBtn").disabled = !category;
+  }
+
+  function setStatus(message, active = false) {
+    $("status").innerHTML = `<i></i>${message}`;
+    $("status").classList.toggle("active", active);
+  }
+
+  function renderHistory() {
+    const list = $("historyList");
+    list.replaceChildren();
+    const recent = history.slice(0, 12);
+    $("historyEmpty").classList.toggle("hidden", recent.length > 0);
+    $("clearHistoryBtn").disabled = history.length === 0;
+    recent.forEach((pick, index) => {
+      const row = document.createElement("div");
+      row.className = "history-item";
+      const num = document.createElement("span");
+      num.className = "history-index";
+      num.textContent = String(history.length - index).padStart(2, "0");
+      const details = document.createElement("div");
+      details.className = "history-details";
+      const name = document.createElement("div");
+      name.className = "history-name";
+      name.textContent = pick.item;
+      const meta = document.createElement("div");
+      meta.className = "history-meta";
+      meta.textContent = `${pick.category} · ${pick.tier} · ${pick.player}`;
+      details.append(name, meta);
+      const price = document.createElement("span");
+      price.className = "history-price";
+      price.textContent = pick.amount == null ? "SKIPPED" : pick.amount.toLocaleString();
+      row.append(num, details, price);
+      list.append(row);
+    });
+  }
+
+  function showPlaceholder() {
+    $("placeholder").classList.remove("hidden");
+    $("pickContent").classList.add("hidden");
+    currentPick = null;
+    updateBidControls();
+  }
+
+  function showPick(pick) {
+    $("placeholder").classList.add("hidden");
+    $("pickContent").classList.remove("hidden");
+    $("pickCategory").textContent = pick.category.toUpperCase();
+    $("pickTier").textContent = pick.tier.toUpperCase();
+    $("pickTier").className = `pick-tier ${pick.tier.toLowerCase()}`;
+    $("pickName").textContent = pick.item;
+    $("pickContent").style.animation = "none";
+    void $("pickContent").offsetWidth;
+    $("pickContent").style.animation = "";
+  }
+
+  function updateBidControls() {
+    const ready = players.length > 0 && currentPick !== null;
+    $("bidPlayer").disabled = !players.length;
+    $("bidAmount").disabled = !ready;
+    $("awardBtn").disabled = !ready;
+    $("skipBtn").disabled = !currentPick;
+  }
+
+  function drawPick() {
+    const category = $("categorySelect").value;
+    if (!category) return;
+    const pool = remainingByCategory[category];
+    const availableTiers = tiers.filter(tier => pool[tier].length > 0);
+    if (!availableTiers.length) {
+      setStatus("CATEGORY COMPLETE");
+      updateStats();
+      return;
+    }
+    const tier = availableTiers[Math.floor(Math.random() * availableTiers.length)];
+    const entries = pool[tier];
+    const index = Math.floor(Math.random() * entries.length);
+    const item = entries.splice(index, 1)[0];
+    currentPick = { category, tier, item };
+    showPick(currentPick);
+    setStatus("OPEN FOR BIDDING", true);
+    updateStats();
+    updateBidControls();
+  }
+
+  function awardPick() {
+    if (!currentPick || !players.length) return;
+    const playerId = Number($("bidPlayer").value);
+    const player = players.find(p => p.id === playerId);
+    const amount = Number($("bidAmount").value);
+
+    if (!player) { alert("Select a player first."); return; }
+    if (!Number.isFinite(amount) || amount < minimumBid) {
+      alert(`Bid must be at least ${minimumBid}.`);
+      $("bidAmount").focus();
+      return;
+    }
+
+    const won = { ...currentPick, player: player.name, amount };
+    player.roster.push({ item: currentPick.item, category: currentPick.category, tier: currentPick.tier, amount });
+    player.spent += amount;
+    history.unshift(won);
+
+    currentPick = null;
+    showPlaceholder();
+    $("placeholder").querySelector(".placeholder-title").textContent = "Pick awarded!";
+    $("placeholder").querySelector("p").textContent = `${player.name} won ${won.item} for ${amount}. Draw the next item when ready.`;
+    setStatus("PICK AWARDED", true);
+    $("bidAmount").value = startingBid;
+    renderPlayers();
+    renderHistory();
+    updateStats();
+    updateBidControls();
+  }
+
+  function skipPick() {
+    if (!currentPick) return;
+    const skipped = { ...currentPick, player: "No winner", amount: null };
+    history.unshift(skipped);
+    currentPick = null;
+    showPlaceholder();
+    $("placeholder").querySelector(".placeholder-title").textContent = "Pick skipped";
+    $("placeholder").querySelector("p").textContent = "This item has been marked as skipped and will not appear again this session.";
+    setStatus("PICK SKIPPED");
+    renderHistory();
+    updateBidControls();
+  }
+
+  function resetCategory() {
+    const category = $("categorySelect").value;
+    if (!category) return;
+    remainingByCategory[category] = clonePool(category);
+    if (currentPick && currentPick.category === category) showPlaceholder();
+    history = history.filter(p => p.category !== category);
+    setStatus("CATEGORY RESET", true);
+    renderHistory();
+    updateStats();
+    updateBidControls();
+  }
+
+  function onCategoryChange() {
+    showPlaceholder();
+    const category = $("categorySelect").value;
+    setStatus(category ? "CATEGORY READY" : "WAITING FOR CATEGORY", Boolean(category));
+    updateStats();
+  }
+
+  function clearHistory() {
+    history = [];
+    renderHistory();
+  }
+
+  function init() {
+    Object.keys(draftCategories).forEach(category => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      $("categorySelect").append(option);
+      remainingByCategory[category] = clonePool(category);
+    });
+
+    renderNameInputs();
+    $("playerCount").addEventListener("change", renderNameInputs);
+    $("startGameBtn").addEventListener("click", createPlayers);
+    $("categorySelect").addEventListener("change", onCategoryChange);
+    $("drawBtn").addEventListener("click", drawPick);
+    $("skipBtn").addEventListener("click", skipPick);
+    $("resetBtn").addEventListener("click", resetCategory);
+    $("awardBtn").addEventListener("click", awardPick);
+    $("clearHistoryBtn").addEventListener("click", clearHistory);
+    $("bidAmount").addEventListener("keydown", event => {
+      if (event.key === "Enter" && !$("awardBtn").disabled) awardPick();
+    });
+    renderPlayers();
+    updateStats();
+    updateBidControls();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+
+</script>
+</body>
+</html>
